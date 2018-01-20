@@ -7,7 +7,7 @@ namespace PocoOrm.Console
     {
         private static void Main()
         {
-            Context unused = new Context(new SqlConnection(), new Options());
+            Context unused = new Context(new SqlConnection(), Options.Default);
         }
     }
 }

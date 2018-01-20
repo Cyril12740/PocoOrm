@@ -3,16 +3,6 @@ using System.Data;
 
 namespace PocoOrm.Core.Annotations
 {
-    public class PrimaryKeyAttribute : Attribute
-    {
-        public bool Identity { get; }
-
-        public PrimaryKeyAttribute(bool identity)
-        {
-            Identity = identity;
-        }
-    }
-
     public class ColumnAttribute : Attribute
     {
         public string Name { get; }

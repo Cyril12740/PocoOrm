@@ -1,7 +1,7 @@
 ﻿using PocoOrm.Core.Annotations;
 using PocoOrm.Core.Contract.Expressions;
 
-namespace PocoOrm.Test
+namespace PocoOrm.Test.Stubs
 {
     public class TestParameterBuilder : ParameterBuilder<TestParameter>
     {

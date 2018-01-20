@@ -17,7 +17,7 @@ namespace PocoOrm.Test
             try
             {
                 // ReSharper disable once ObjectCreationAsStatement
-                new SpecialContext(new SqlConnection(), new Options());
+                new SpecialContext(new SqlConnection(), Options.Empty);
             }
             catch (TargetInvocationException e)
             {
@@ -32,6 +32,7 @@ namespace PocoOrm.Test
 
         private class SpecialContext : SqlContext
         {
+            // ReSharper disable once UnusedMember.Local
             public IRepository<ErrorType> Repository { get; set; }
 
             public SpecialContext(SqlConnection connection, Options options) : base(connection, options)

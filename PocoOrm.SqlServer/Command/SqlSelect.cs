@@ -29,8 +29,11 @@ namespace PocoOrm.SqlServer.Command
             if (_expression != null)
             {
                 ExpressionToSql parser = new ExpressionToSql(_repository.Context.Options);
+
                 ISqlBuilder builder = parser.Visit(_expression);
+
                 string whereClause = builder.Build(parser, out DbParameter[] parameters);
+
                 cmd.CommandText = $"SELECT * FROM  {_repository.TableName} WHERE {whereClause}";
 
                 foreach (DbParameter parameter in parameters)

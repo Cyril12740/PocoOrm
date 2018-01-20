@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Data.Common;
 using PocoOrm.Core.Contract.Expressions;
 
 namespace PocoOrm.Core.Expressions.Builder
 {
-    public abstract class BinaryBuilder<TLeft, TRight> : IBinaryBuilder
+    public abstract class BinaryBuilder<TLeft, TRight> : IBinaryParser
         where TLeft : ISqlBuilder
         where TRight : ISqlBuilder
     {
@@ -12,19 +11,11 @@ namespace PocoOrm.Core.Expressions.Builder
 
         public Type Right => typeof(TRight);
 
-        public string Build(ExpressionToSql parser,
-                            ISqlBuilder left,
-                            object comp,
-                            ISqlBuilder right,
-                            out DbParameter[] parameters)
+        ISqlInverseBuilder IBinaryParser.Initialize(ISqlBuilder left, EnumCompare comp, ISqlBuilder right)
         {
-            return Build(parser, (TLeft) left, comp, (TRight) right, out parameters);
+            return Initialize((TLeft) left, comp, (TRight) right);
         }
 
-        protected abstract string Build(ExpressionToSql parser,
-                                        TLeft left,
-                                        object comp,
-                                        TRight right,
-                                        out DbParameter[] parameters);
+        protected abstract ISqlInverseBuilder Initialize(TLeft left, EnumCompare compare, TRight right);
     }
 }

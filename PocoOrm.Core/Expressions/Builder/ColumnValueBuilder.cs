@@ -1,24 +1,38 @@
 ﻿using System.Data.Common;
+using PocoOrm.Core.Contract.Expressions;
+using PocoOrm.Core.Helpers;
 
 namespace PocoOrm.Core.Expressions.Builder
 {
-    internal class ColumnValueBuilder : BinaryBuilder<SqlColumnBuilder, SqlValueBuilder>
+    internal class ColumnValueBuilder : ISqlInverseBuilder
     {
-        protected override string Build(ExpressionToSql parser,
-                                        SqlColumnBuilder left,
-                                        object comp,
-                                        SqlValueBuilder right,
-                                        out DbParameter[] parameters)
+        private readonly EnumCompare      _compare;
+        private readonly SqlColumnBuilder _left;
+        private readonly SqlValueBuilder  _right;
+
+        public ColumnValueBuilder(SqlColumnBuilder left, EnumCompare compare, SqlValueBuilder right)
         {
-            string sqlColumn = left.Build(parser, out var _);
-            string sqlParameter = right.Build(parser, out parameters);
+            _left = left;
+            _compare = compare;
+            _right = right;
+        }
+
+        public string Build(ExpressionToSql parser, out DbParameter[] parameters)
+        {
+            string sqlColumn = _left.Build(parser, out var _);
+            string sqlParameter = _right.Build(parser, out parameters);
 
             parameters = new[]
             {
-                parser.Options.ParameterBuilder.Build(sqlParameter, left.Column, right.Value)
+                parser.Options.ParameterBuilder.Build(sqlParameter, _left.Column, _right.Value)
             };
 
-            return $"{sqlColumn} = {sqlParameter}";
+            return $"{sqlColumn} {_compare.ToSql()} {sqlParameter}";
+        }
+
+        public ISqlBuilder Inverse()
+        {
+            return new ColumnValueBuilder(_left, _compare.Inverse(), _right);
         }
     }
 }

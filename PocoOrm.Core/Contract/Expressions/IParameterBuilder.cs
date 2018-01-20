@@ -7,15 +7,4 @@ namespace PocoOrm.Core.Contract.Expressions
     {
         DbParameter Build(string name, ColumnAttribute column, object value);
     }
-
-    public abstract class ParameterBuilder<TParameter> : IParameterBuilder
-        where TParameter : DbParameter
-    {
-        DbParameter IParameterBuilder.Build(string name, ColumnAttribute column, object value)
-        {
-            return Build(name, column, value);
-        }
-
-        protected abstract TParameter Build(string name, ColumnAttribute column, object value);
-    }
 }

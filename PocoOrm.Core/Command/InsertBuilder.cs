@@ -24,9 +24,11 @@ namespace PocoOrm.Core.Command
                                                                                              ColumnAttribute>());
             List<DbParameter> parameters = new List<DbParameter>();
             List<string> entitySql = new List<string>();
+
             foreach (TEntity entity in entities)
             {
                 List<string> paramterNames = new List<string>();
+
                 foreach (KeyValuePair<PropertyInfo, ColumnAttribute> pair in properties)
                 {
                     PropertyInfo property = pair.Key;
@@ -37,8 +39,10 @@ namespace PocoOrm.Core.Command
                     paramterNames.Add(parameterName);
                     parameters.Add(parameter);
                 }
+
                 entitySql.Add($"({string.Join(", ", paramterNames)})");
             }
+
             return new InsertBuilderResult
             {
                 Columns = $"({string.Join(", ", properties.Select(c => c.Value.Name))})",
@@ -50,10 +54,12 @@ namespace PocoOrm.Core.Command
         private static bool PredicateMustInsert(PropertyInfo property)
         {
             ColumnAttribute customAttribute = property.GetCustomAttribute<ColumnAttribute>();
+
             if (customAttribute is null)
             {
                 return false;
             }
+
             PrimaryKeyAttribute primaryKeyAttribute = property.GetCustomAttribute<PrimaryKeyAttribute>();
             return primaryKeyAttribute?.Identity != true;
         }

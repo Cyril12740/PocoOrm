@@ -6,6 +6,11 @@ namespace PocoOrm.Core.Helpers
     {
         public static bool Is(this object obj, Type type)
         {
+            if (obj == null)
+            {
+                return type == null;
+            }
+
             Type objType = obj.GetType();
 
             while (objType.BaseType != null)

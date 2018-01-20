@@ -21,7 +21,7 @@ namespace PocoOrm.Core.Expressions
 
         public ISqlBuilder Visit(Expression expression)
         {
-            foreach (IParser parser in Options.ExpressionParser.Where(parser => expression.Is(parser.Type)))
+            foreach (IParser parser in Options.Parser.Where(parser => expression.Is(parser.Type)))
             {
                 return parser.Visit(expression, this);
             }

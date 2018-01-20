@@ -8,7 +8,7 @@ namespace PocoOrm.Core.Expressions.Parser
     {
         protected override ISqlBuilder Visit(ConstantExpression expression, ExpressionToSql parser)
         {
-            return new SqlValueBuilder(expression.Value);
+            return expression.Value != null ? new SqlValueBuilder(expression.Value) : null;
         }
     }
 }

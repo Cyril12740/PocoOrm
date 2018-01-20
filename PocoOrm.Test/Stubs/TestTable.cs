@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using PocoOrm.Core.Annotations;
 
-namespace PocoOrm.Test
+namespace PocoOrm.Test.Stubs
 {
     [Table("Test")]
     internal class TestTable

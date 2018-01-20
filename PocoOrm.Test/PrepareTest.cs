@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PocoOrm.Core;
+using PocoOrm.Test.Stubs;
 
 namespace PocoOrm.Test
 {
@@ -19,11 +20,12 @@ namespace PocoOrm.Test
         public async Task Initialize()
         {
             await _connection.OpenAsync();
+            await Execute("DBCC CHECKIDENT ('Test', RESEED, 0)");
             await Execute("INSERT INTO Test VALUES ('Bonjour')");
             await Execute("INSERT INTO Test VALUES ('Salut')");
             await Execute("INSERT INTO Test VALUES ('Test')");
             _connection.Close();
-            Context = new Context(_connection, new Options());
+            Context = new Context(_connection, Options.Default);
         }
         private async Task Execute(string sql)
         {

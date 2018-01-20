@@ -2,7 +2,7 @@
 using System.Data.Common;
 using PocoOrm.Core.Annotations;
 
-namespace PocoOrm.Test
+namespace PocoOrm.Test.Stubs
 {
     public sealed class TestParameter : DbParameter
     {

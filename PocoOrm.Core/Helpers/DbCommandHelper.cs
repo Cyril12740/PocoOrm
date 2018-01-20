@@ -22,7 +22,7 @@ namespace PocoOrm.Core.Helpers
                         items.Add(mapper.Map(reader));
                     }
 
-                    cmd.Connection.Close();//todo not like this - finaly block
+                    cmd.Connection.Close(); //todo not like this - finaly block
                     return items;
                 }
             });

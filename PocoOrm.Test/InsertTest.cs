@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PocoOrm.Core.Helpers;
+using PocoOrm.Test.Stubs;
 
 namespace PocoOrm.Test
 {

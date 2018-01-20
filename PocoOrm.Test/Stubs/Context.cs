@@ -3,7 +3,7 @@ using PocoOrm.Core;
 using PocoOrm.Core.Contract;
 using PocoOrm.SqlServer;
 
-namespace PocoOrm.Test
+namespace PocoOrm.Test.Stubs
 {
     internal class Context : SqlContext
     {

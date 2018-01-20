@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PocoOrm.Test.Stubs;
 
 namespace PocoOrm.Test
 {
@@ -29,6 +30,14 @@ namespace PocoOrm.Test
             IEnumerable<TestTable> result = await Context.Test.Select().Where(t => t.Content == "Salut").ExecuteAsync();
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Count());
+        }
+
+        [TestMethod]
+        public async Task TestCanSelectWithGreaterComparaison()
+        {
+            IEnumerable<TestTable> result = await Context.Test.Select().Where(t => t.Id > 1).ExecuteAsync();
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Count());
         }
     }
 }
