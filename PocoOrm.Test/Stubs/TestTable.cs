@@ -9,7 +9,7 @@ namespace PocoOrm.Test
         [Column("Content", DbType.String)]
         public string Content { get; set; }
 
-        [Column("Id", DbType.Int32)]
+        [Column("Id", DbType.Int32), PrimaryKey(true)]
         public int Id { get; set; }
     }
 }

@@ -30,7 +30,6 @@ namespace PocoOrm.Core
             {
                 _expressionParser.Add(parser);
             }
-
             return this;
         }
         public Options Use(params IParser[] parsers)
@@ -39,7 +38,6 @@ namespace PocoOrm.Core
             {
                 throw new ArgumentNullException(nameof(parsers));
             }
-
             _expressionParser.AddRange(parsers);
             return this;
         }
@@ -50,7 +48,6 @@ namespace PocoOrm.Core
             {
                 throw new ArgumentNullException(nameof(parser));
             }
-
             _binaryParser.Add(parser);
             return this;
         }
@@ -61,7 +58,6 @@ namespace PocoOrm.Core
             {
                 throw new ArgumentNullException(nameof(parsers));
             }
-
             _binaryParser.AddRange(parsers);
             return this;
         }

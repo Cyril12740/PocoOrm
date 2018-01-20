@@ -3,7 +3,6 @@ using PocoOrm.Core;
 
 namespace PocoOrm.Console
 {
-
     internal class Program
     {
         private static void Main()

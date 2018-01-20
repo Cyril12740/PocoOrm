@@ -25,6 +25,7 @@ namespace PocoOrm.Test
                 {
                     throw e.InnerException;
                 }
+
                 throw;
             }
         }

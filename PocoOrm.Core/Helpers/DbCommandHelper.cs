@@ -12,14 +12,17 @@ namespace PocoOrm.Core.Helpers
         {
             return await Task.Run(() => {
                 cmd.Connection.Open();
+
                 using (IDataReader reader = cmd.ExecuteReader())
                 {
                     List<TEntity> items = new List<TEntity>();
+
                     while (reader.Read())
                     {
                         items.Add(mapper.Map(reader));
                     }
-                    cmd.Connection.Close();
+
+                    cmd.Connection.Close();//todo not like this - finaly block
                     return items;
                 }
             });

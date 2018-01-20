@@ -10,6 +10,10 @@ namespace PocoOrm.Core.Contract.Expressions
 
         Type Right { get; }
 
-        string Build(ExpressionToSql parser, ISqlBuilder left, object comp, ISqlBuilder right, out DbParameter[] parameter);
+        string Build(ExpressionToSql parser,
+                     ISqlBuilder left,
+                     object comp,
+                     ISqlBuilder right,
+                     out DbParameter[] parameter);
     }
 }

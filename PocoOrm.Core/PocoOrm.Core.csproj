@@ -42,6 +42,9 @@
   <ItemGroup>
     <Compile Include="Annotations\TableAttribute.cs" />
     <Compile Include="Annotations\ColumnAttribute.cs" />
+    <Compile Include="Command\InsertBuilder.cs" />
+    <Compile Include="Command\InsertBuilderResult.cs" />
+    <Compile Include="Helpers\RepositoryHeler.cs" />
     <Compile Include="Exceptions\ParserException.cs" />
     <Compile Include="Expressions\Builder\BinaryBuilder.cs" />
     <Compile Include="Expressions\Builder\ColumnValueBuilder.cs" />

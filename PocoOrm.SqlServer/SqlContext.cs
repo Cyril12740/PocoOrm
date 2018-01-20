@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using PocoOrm.Core;
@@ -13,7 +12,7 @@ namespace PocoOrm.SqlServer
         // ReSharper disable once SuggestBaseTypeForParameter
         protected SqlContext(SqlConnection connection, Options options) : base(connection, options)
         {
-            this.Options.Use(new SqlParameterBuilder());
+            Options.Use(new SqlParameterBuilder());
         }
 
         protected sealed override object CreateRepository(Type genericTable)
@@ -34,18 +33,18 @@ namespace PocoOrm.SqlServer
         protected override SqlParameter Build(string name, ColumnAttribute column, object value)
         {
             return column.Size != null
-                       ? new SqlParameter()
+                       ? new SqlParameter
                        {
                            ParameterName = name,
                            DbType = column.Type,
                            Value = value,
                            Size = column.Size.Value
                        }
-                       : new SqlParameter()
+                       : new SqlParameter
                        {
                            ParameterName = name,
                            DbType = column.Type,
-                           Value = value,
+                           Value = value
                        };
         }
     }

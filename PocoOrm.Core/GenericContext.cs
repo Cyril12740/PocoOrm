@@ -22,6 +22,7 @@ namespace PocoOrm.Core
         private void InitialiseRepository()
         {
             Type type = GetType();
+
             foreach (PropertyInfo property in type
                                               .GetProperties(BindingFlags.Instance |
                                                              BindingFlags.Public |

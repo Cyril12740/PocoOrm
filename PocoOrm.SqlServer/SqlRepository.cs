@@ -17,7 +17,7 @@ namespace PocoOrm.SqlServer
 
         public override IInsert<TEntity> Insert()
         {
-            return new SqlInsert<TEntity>();
+            return new SqlInsert<TEntity>(this);
         }
 
         public override ISelect<TEntity> Select()

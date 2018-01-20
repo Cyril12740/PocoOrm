@@ -25,10 +25,8 @@ namespace PocoOrm.Test
             Expression<Predicate<TestTable>> expression = table => table.Id == 1;
             ISqlBuilder builder = _builder.Visit(expression);
             string sql = builder.Build(_builder, out DbParameter[] parameters);
-
             Assert.AreEqual("Id = @parameter1", sql);
             Assert.AreEqual(1, parameters.Length);
         }
-
     }
 }

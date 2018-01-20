@@ -15,14 +15,17 @@ namespace PocoOrm.Core.Expressions.Parser
             {
                 throw new ArgumentNullException(nameof(expression));
             }
+
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
+
             if (expression is TExpression casted)
             {
                 return Visit(casted, builder);
             }
+
             throw new ArgumentException($"not supported {expression.GetType().Name}", nameof(expression));
         }
 

@@ -6,18 +6,6 @@ namespace PocoOrm.Test
 {
     public sealed class TestParameter : DbParameter
     {
-        public TestParameter(string name, ColumnAttribute column, object value)
-        {
-            ParameterName = name;
-            DbType = column.Type;
-            Size = column.Size ?? 0;
-            Value = value;
-        }
-
-        public override void ResetDbType()
-        {
-        }
-
         public override DbType DbType { get; set; }
 
         public override ParameterDirection Direction { get; set; }
@@ -33,5 +21,17 @@ namespace PocoOrm.Test
         public override bool SourceColumnNullMapping { get; set; }
 
         public override int Size { get; set; }
+
+        public TestParameter(string name, ColumnAttribute column, object value)
+        {
+            ParameterName = name;
+            DbType = column.Type;
+            Size = column.Size ?? 0;
+            Value = value;
+        }
+
+        public override void ResetDbType()
+        {
+        }
     }
 }

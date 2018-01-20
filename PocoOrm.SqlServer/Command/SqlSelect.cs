@@ -32,6 +32,7 @@ namespace PocoOrm.SqlServer.Command
                 ISqlBuilder builder = parser.Visit(_expression);
                 string whereClause = builder.Build(parser, out DbParameter[] parameters);
                 cmd.CommandText = $"SELECT * FROM  {_repository.TableName} WHERE {whereClause}";
+
                 foreach (DbParameter parameter in parameters)
                 {
                     cmd.Parameters.Add(parameter);
