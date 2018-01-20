@@ -1,14 +1,14 @@
 ﻿using System.Data.SqlClient;
+using PocoOrm.Core;
 
 namespace PocoOrm.Console
 {
-    using Core;
 
     internal class Program
     {
         private static void Main()
         {
-            Context unused = new Context(new SqlConnection(), new ContextOptions());
+            Context unused = new Context(new SqlConnection(), new Options());
         }
     }
 }

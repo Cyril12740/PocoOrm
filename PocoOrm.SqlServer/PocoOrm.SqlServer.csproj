@@ -47,8 +47,8 @@
     <Compile Include="SqlRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PocoOrm\PocoOrm.Core.csproj">
-      <Project>{018D3A18-08B4-40F2-89DB-0EC659909640}</Project>
+    <ProjectReference Include="..\PocoOrm.Core\PocoOrm.Core.csproj">
+      <Project>{018d3a18-08b4-40f2-89db-0ec659909640}</Project>
       <Name>PocoOrm.Core</Name>
     </ProjectReference>
   </ItemGroup>

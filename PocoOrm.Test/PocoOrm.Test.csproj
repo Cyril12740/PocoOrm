@@ -62,13 +62,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PocoOrm.Core\PocoOrm.Core.csproj">
+      <Project>{018d3a18-08b4-40f2-89db-0ec659909640}</Project>
+      <Name>PocoOrm.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PocoOrm.SqlServer\PocoOrm.SqlServer.csproj">
       <Project>{f8d60d2a-faf4-44f3-8931-156b245744c5}</Project>
       <Name>PocoOrm.SqlServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PocoOrm\PocoOrm.Core.csproj">
-      <Project>{018D3A18-08B4-40F2-89DB-0EC659909640}</Project>
-      <Name>PocoOrm.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
