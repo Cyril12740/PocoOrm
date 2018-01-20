@@ -187,5 +187,134 @@ namespace PocoOrm.Test
             Assert.AreEqual("Id > @parameter1", sql);
             Assert.AreEqual(1, parameters.Length);
         }
+
+        [TestMethod]
+        public void TestWithAnd()
+        {
+            // ReSharper disable once NegativeEqualityExpression
+            Expression<Predicate<TestTable>> expression = table => table.Id == 1 && table.Content == "Bonjour";
+            ISqlBuilder builder = _builder.Visit(expression);
+            string sql = builder.Build(_builder, out DbParameter[] parameters);
+            Assert.AreEqual("( Id = @parameter1 AND Content = @parameter2 )", sql);
+            Assert.AreEqual(2, parameters.Length);
+            Assert.AreEqual("@parameter1", parameters[0].ParameterName);
+            Assert.AreEqual(1, parameters[0].Value);
+            Assert.AreEqual("@parameter2", parameters[1].ParameterName);
+            Assert.AreEqual("Bonjour", parameters[1].Value);
+        }
+        [TestMethod]
+        public void TestWithAnd2()
+        {
+            // ReSharper disable once NegativeEqualityExpression
+            Expression<Predicate<TestTable>> expression = table => (table.Id == 1) & (table.Content == "Bonjour");
+            ISqlBuilder builder = _builder.Visit(expression);
+            string sql = builder.Build(_builder, out DbParameter[] parameters);
+            Assert.AreEqual("( Id = @parameter1 AND Content = @parameter2 )", sql);
+            Assert.AreEqual(2, parameters.Length);
+            Assert.AreEqual("@parameter1", parameters[0].ParameterName);
+            Assert.AreEqual(1, parameters[0].Value);
+            Assert.AreEqual("@parameter2", parameters[1].ParameterName);
+            Assert.AreEqual("Bonjour", parameters[1].Value);
+        }
+        [TestMethod]
+        public void TestWithOr()
+        {
+            // ReSharper disable once NegativeEqualityExpression
+            Expression<Predicate<TestTable>> expression = table => table.Id == 1 || table.Content == "Bonjour";
+            ISqlBuilder builder = _builder.Visit(expression);
+            string sql = builder.Build(_builder, out DbParameter[] parameters);
+            Assert.AreEqual("( Id = @parameter1 OR Content = @parameter2 )", sql);
+            Assert.AreEqual(2, parameters.Length);
+            Assert.AreEqual("@parameter1", parameters[0].ParameterName);
+            Assert.AreEqual(1, parameters[0].Value);
+            Assert.AreEqual("@parameter2", parameters[1].ParameterName);
+            Assert.AreEqual("Bonjour", parameters[1].Value);
+        }
+        [TestMethod]
+        public void TestWithOr2()
+        {
+            // ReSharper disable once NegativeEqualityExpression
+            Expression<Predicate<TestTable>> expression = table => (table.Id == 1) | (table.Content == "Bonjour");
+            ISqlBuilder builder = _builder.Visit(expression);
+            string sql = builder.Build(_builder, out DbParameter[] parameters);
+            Assert.AreEqual("( Id = @parameter1 OR Content = @parameter2 )", sql);
+            Assert.AreEqual(2, parameters.Length);
+            Assert.AreEqual("@parameter1", parameters[0].ParameterName);
+            Assert.AreEqual(1, parameters[0].Value);
+            Assert.AreEqual("@parameter2", parameters[1].ParameterName);
+            Assert.AreEqual("Bonjour", parameters[1].Value);
+        }
+
+
+        [TestMethod]
+        public void TestCompexeCondition()
+        {
+            // ReSharper disable once NegativeEqualityExpression
+            Expression<Predicate<TestTable>> expression = table => table.Id == 1 && table.Content != null && table.Content == "Bonjour";
+            ISqlBuilder builder = _builder.Visit(expression);
+            string sql = builder.Build(_builder, out DbParameter[] parameters);
+            Assert.AreEqual("( ( Id = @parameter1 AND Content IS NOT NULL ) AND Content = @parameter2 )", sql);
+            Assert.AreEqual(2, parameters.Length);
+            Assert.AreEqual("@parameter1", parameters[0].ParameterName);
+            Assert.AreEqual(1, parameters[0].Value);
+            Assert.AreEqual("@parameter2", parameters[1].ParameterName);
+            Assert.AreEqual("Bonjour", parameters[1].Value);
+        }
+
+        [TestMethod]
+        public void TestCompexeCondition2()
+        {
+            // ReSharper disable once NegativeEqualityExpression
+            Expression<Predicate<TestTable>> expression = table => table.Id == 1 || table.Content != null && table.Content == "Bonjour";
+            ISqlBuilder builder = _builder.Visit(expression);
+            string sql = builder.Build(_builder, out DbParameter[] parameters);
+            Assert.AreEqual("( Id = @parameter1 OR ( Content IS NOT NULL AND Content = @parameter2 ) )", sql);
+            Assert.AreEqual(2, parameters.Length);
+            Assert.AreEqual("@parameter1", parameters[0].ParameterName);
+            Assert.AreEqual(1, parameters[0].Value);
+            Assert.AreEqual("@parameter2", parameters[1].ParameterName);
+            Assert.AreEqual("Bonjour", parameters[1].Value);
+        }
+
+        [TestMethod]
+        public void TestCompexeCondition3()
+        {
+            // ReSharper disable once NegativeEqualityExpression
+            Expression<Predicate<TestTable>> expression = table => table.Id == 1 && table.Content == null || table.Content == "Bonjour";
+            ISqlBuilder builder = _builder.Visit(expression);
+            string sql = builder.Build(_builder, out DbParameter[] parameters);
+            Assert.AreEqual("( ( Id = @parameter1 AND Content IS NULL ) OR Content = @parameter2 )", sql);
+            Assert.AreEqual(2, parameters.Length);
+            Assert.AreEqual("@parameter1", parameters[0].ParameterName);
+            Assert.AreEqual(1, parameters[0].Value);
+            Assert.AreEqual("@parameter2", parameters[1].ParameterName);
+            Assert.AreEqual("Bonjour", parameters[1].Value);
+        }
+
+        [TestMethod]
+        public void TestInverseAnd()
+        {
+            // ReSharper disable once NegativeEqualityExpression
+            Expression<Predicate<TestTable>> expression = table => !(table.Id <= 2 && table.Content == null);
+            ISqlBuilder builder = _builder.Visit(expression);
+            string sql = builder.Build(_builder, out DbParameter[] parameters);
+            Assert.AreEqual("( Id > @parameter1 OR Content IS NOT NULL )", sql);
+            Assert.AreEqual(1, parameters.Length);
+            Assert.AreEqual("@parameter1", parameters[0].ParameterName);
+            Assert.AreEqual(2, parameters[0].Value);
+        }
+
+        [TestMethod]
+        public void TestInverseOr()
+        {
+            // ReSharper disable once NegativeEqualityExpression
+            Expression<Predicate<TestTable>> expression = table => !(table.Id <= 2 || table.Content == null);
+            ISqlBuilder builder = _builder.Visit(expression);
+            string sql = builder.Build(_builder, out DbParameter[] parameters);
+            Assert.AreEqual("( Id > @parameter1 AND Content IS NOT NULL )", sql);
+            Assert.AreEqual(1, parameters.Length);
+            Assert.AreEqual("@parameter1", parameters[0].ParameterName);
+            Assert.AreEqual(2, parameters[0].Value);
+        }
     }
 }

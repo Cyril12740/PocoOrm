@@ -46,6 +46,8 @@
     <Compile Include="Command\InsertBuilder.cs" />
     <Compile Include="Command\InsertBuilderResult.cs" />
     <Compile Include="Contract\Expressions\EnumCompare.cs" />
+    <Compile Include="Expressions\Builder\GroupedConditionBuilder.cs" />
+    <Compile Include="Expressions\Parser\GroupedConditionParser.cs" />
     <Compile Include="Contract\Expressions\ParameterBuilder.cs" />
     <Compile Include="Expressions\Builder\ColumnValueBuilder.cs" />
     <Compile Include="Expressions\Builder\CompareNullBuilder.cs" />
@@ -53,7 +55,6 @@
     <Compile Include="Helpers\EnumCompareHelper.cs" />
     <Compile Include="Helpers\RepositoryHeler.cs" />
     <Compile Include="Exceptions\ParserException.cs" />
-    <Compile Include="Expressions\Builder\BinaryBuilder.cs" />
     <Compile Include="Expressions\Parser\ColumnValueParser.cs" />
     <Compile Include="Expressions\Parser\BinaryParser.cs" />
     <Compile Include="Contract\Expressions\IBinaryParser.cs" />

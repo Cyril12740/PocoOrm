@@ -4,6 +4,6 @@ namespace PocoOrm.Core
 {
     public interface ISqlInverseBuilder : ISqlBuilder
     {
-        ISqlBuilder Inverse();
+        ISqlInverseBuilder Inverse();
     }
 }

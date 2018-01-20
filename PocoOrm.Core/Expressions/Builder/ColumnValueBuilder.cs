@@ -30,7 +30,7 @@ namespace PocoOrm.Core.Expressions.Builder
             return $"{sqlColumn} {_compare.ToSql()} {sqlParameter}";
         }
 
-        public ISqlBuilder Inverse()
+        public ISqlInverseBuilder Inverse()
         {
             return new ColumnValueBuilder(_left, _compare.Inverse(), _right);
         }

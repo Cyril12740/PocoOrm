@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace PocoOrm.Core.Contract.Expressions
 {
@@ -7,6 +9,8 @@ namespace PocoOrm.Core.Contract.Expressions
         Type Left { get; }
 
         Type Right { get; }
+
+        ExpressionType[] Type { get; }
 
         ISqlInverseBuilder Initialize(ISqlBuilder left, EnumCompare comp, ISqlBuilder right);
     }

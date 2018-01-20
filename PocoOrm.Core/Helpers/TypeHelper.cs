@@ -13,6 +13,14 @@ namespace PocoOrm.Core.Helpers
 
             Type objType = obj.GetType();
 
+            foreach (Type @interface in objType.GetInterfaces())
+            {
+                if (@interface == type)
+                {
+                    return true;
+                }
+            }
+
             while (objType.BaseType != null)
             {
                 if (objType == type)

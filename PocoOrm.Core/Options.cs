@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using PocoOrm.Core.Contract.Expressions;
 using PocoOrm.Core.Expressions.Builder;
+using PocoOrm.Core.Expressions.Parser;
 
 namespace PocoOrm.Core
 {
@@ -15,7 +16,7 @@ namespace PocoOrm.Core
         public static    Options       Empty => new Options();
 
         public static Options Default => new Options()
-                                         .Use(new ColumnValueParser(), new CompareNullParser())
+                                         .Use(new GroupedConditionParser(), new ColumnValueParser(), new CompareNullParser())
                                          .Use(Expressions.Parser.Parser.Default());
 
         public ReadOnlyCollection<IParser> Parser => _parser.AsReadOnly();
