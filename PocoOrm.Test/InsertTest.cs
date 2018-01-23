@@ -20,13 +20,32 @@ namespace PocoOrm.Test
                                                              Content = content
                                                          })
                                                          .ExecuteAsync()).ToArray();
-            SqlCommand cmd = new SqlCommand($"select count(*) from Test where Content = '{content}'", _connection);
-            await _connection.OpenAsync();
-            int result = (int) await cmd.ExecuteScalarAsync();
-            _connection.Close();
+            SqlCommand cmd = new SqlCommand($"select count(*) from Test where Content = '{content}'", Connection);
+            await Connection.OpenAsync();
+            int result = (int)await cmd.ExecuteScalarAsync();
+            Connection.Close();
             Assert.AreEqual(1, result, "nombre de ligne inséré");
             Assert.AreEqual(1, insertedEntities.Length);
             Assert.AreEqual(content, insertedEntities[0].Content);
         }
+
+        [TestMethod]
+        public async Task TestInsertNull()
+        {
+            TestTable[] insertedEntities = (await Context.Test.Insert(null)
+                                                         .ExecuteAsync()).ToArray();
+            
+            Assert.AreEqual(0, insertedEntities.Length);
+        }
+
+        [TestMethod]
+        public async Task TestInsertNullValue()
+        {
+            TestTable[] insertedEntities = (await Context.Test.Insert(new TestTable[]{ null })
+                                                         .ExecuteAsync()).ToArray();
+
+            Assert.AreEqual(0, insertedEntities.Length);
+        }
+
     }
 }
