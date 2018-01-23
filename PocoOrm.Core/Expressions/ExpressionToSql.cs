@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using PocoOrm.Core.Contract.Command;
 using PocoOrm.Core.Contract.Expressions;
 using PocoOrm.Core.Helpers;
 
@@ -8,14 +9,13 @@ namespace PocoOrm.Core.Expressions
 {
     public class ExpressionToSql
     {
-        private int _parameter;
-
-        public int Parameter => ++_parameter;
+        public IParameterCounter Counter { get; }
 
         public Options Options { get; }
 
-        public ExpressionToSql(Options options)
+        public ExpressionToSql(IParameterCounter counter, Options options)
         {
+            Counter = counter ?? throw new ArgumentNullException(nameof(counter));
             Options = options ?? throw new ArgumentNullException(nameof(options));
         }
 

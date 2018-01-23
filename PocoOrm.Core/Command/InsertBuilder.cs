@@ -5,19 +5,19 @@ using System.Linq;
 using System.Reflection;
 using PocoOrm.Core.Annotations;
 using PocoOrm.Core.Contract;
+using PocoOrm.Core.Contract.Command;
 
 namespace PocoOrm.Core.Command
 {
     public class InsertBuilder<TEntity> where TEntity : class, new()
     {
         private readonly IRepository<TEntity> _repository;
-        private int _counter;
+        private readonly IParameterCounter _counter;
 
-        private string ParameterName => $"@parameter{++_counter}";
-
-        public InsertBuilder(IRepository<TEntity> repository)
+        public InsertBuilder(IRepository<TEntity> repository, IParameterCounter counter)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _counter = counter ?? throw new ArgumentNullException(nameof(counter));
         }
 
         public InsertBuilderResult Build(Options options, TEntity[] entities)

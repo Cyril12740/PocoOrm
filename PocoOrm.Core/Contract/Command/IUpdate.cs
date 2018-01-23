@@ -2,10 +2,17 @@
 
 namespace PocoOrm.Core.Contract.Command
 {
-    public interface IUpdate<TEntity> : IExecutable<IEnumerable<TEntity>> where TEntity : class, new()
+    public interface IUpdate<TEntity> : IExecutable<IEnumerable<TEntity>>, IParameterCounter where TEntity : class, new()
     {
-        IUpdate<TEntity> Entity(TEntity entity);
-
+        Options Options { get; }
         IUpdate<TEntity> Entities(params TEntity[] entities);
+    }
+
+    public interface IParameterCounter
+    {
+        /// <summary>
+        /// Must be introduce an different name on each call
+        /// </summary>
+        string ParameterName { get; }
     }
 }

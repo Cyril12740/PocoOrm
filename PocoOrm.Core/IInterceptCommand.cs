@@ -1,9 +1,9 @@
-﻿using System.Data.Common;
+﻿using System.Data;
 
 namespace PocoOrm.Core
 {
     public interface IInterceptCommand
     {
-        void Intercept(DbCommand command);
+        void Intercept(IDbCommand command);
     }
 }
