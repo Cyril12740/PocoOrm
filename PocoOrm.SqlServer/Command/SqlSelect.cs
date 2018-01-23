@@ -4,37 +4,35 @@ using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using PocoOrm.Core.Command;
+using PocoOrm.Core.Contract;
 using PocoOrm.Core.Contract.Command;
 using PocoOrm.Core.Contract.Expressions;
 using PocoOrm.Core.Expressions;
-using PocoOrm.Core.Helpers;
 
 namespace PocoOrm.SqlServer.Command
 {
-    internal class SqlSelect<TEntity> : ISelect<TEntity> where TEntity : class, new()
+    internal class SqlSelect<TEntity> : ReaderExecute<TEntity>, ISelect<TEntity> where TEntity : class, new()
     {
-        private readonly SqlRepository<TEntity> _repository;
-
         private Expression<Predicate<TEntity>> _expression;
 
-        public SqlSelect(SqlRepository<TEntity> sqlRepository)
+        public SqlSelect(IRepository<TEntity> repository): base(repository)
         {
-            _repository = sqlRepository ?? throw new ArgumentNullException(nameof(sqlRepository));
         }
 
-        public async Task<IEnumerable<TEntity>> ExecuteAsync()
+        public override async Task<IEnumerable<TEntity>> ExecuteAsync()
         {
-            IDbCommand cmd = _repository.Context.Connection.CreateCommand();
+            IDbCommand cmd = Repository.Context.Connection.CreateCommand();
 
             if (_expression != null)
             {
-                ExpressionToSql parser = new ExpressionToSql(_repository.Context.Options);
+                ExpressionToSql parser = new ExpressionToSql(Repository.Context.Options);
 
                 ISqlBuilder builder = parser.Visit(_expression);
 
                 string whereClause = builder.Build(parser, out DbParameter[] parameters);
 
-                cmd.CommandText = $"SELECT * FROM  {_repository.TableName} WHERE {whereClause}";
+                cmd.CommandText = $"SELECT * FROM  {Repository.TableName} WHERE {whereClause}";
 
                 foreach (DbParameter parameter in parameters)
                 {
@@ -43,10 +41,10 @@ namespace PocoOrm.SqlServer.Command
             }
             else
             {
-                cmd.CommandText = $"SELECT * FROM  {_repository.TableName}";
+                cmd.CommandText = $"SELECT * FROM  {Repository.TableName}";
             }
 
-            return await cmd.ExecuteReaderAsync(_repository.Mapper);
+            return await ExecuteReaderAsync(cmd);
         }
 
         public ISelect<TEntity> Where(Expression<Predicate<TEntity>> expression)
