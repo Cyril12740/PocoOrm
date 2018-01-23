@@ -4,18 +4,18 @@ using System.Threading.Tasks;
 
 namespace PocoOrm.SqlServer.Helpers
 {
-    internal static class SqlCommandHelper
+    internal static class SqlConnectionHelper
     {
-        public static async Task<T> OpenDatabase<T>(this SqlCommand cmd, Func<Task<T>> execute)
+        public static async Task<T> OpenDatabase<T>(this SqlConnection connection, Func<Task<T>> execute)
         {
             try
             {
-                await cmd.Connection.OpenAsync();
+                await connection.OpenAsync();
                 return await execute();
             }
             finally
             {
-                cmd.Connection.Close();
+                connection.Close();
             }
         }
 

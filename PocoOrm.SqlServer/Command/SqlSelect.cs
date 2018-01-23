@@ -5,38 +5,39 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using PocoOrm.Core.Command;
+using PocoOrm.Core.Contract;
 using PocoOrm.Core.Contract.Command;
 using PocoOrm.Core.Contract.Expressions;
 using PocoOrm.Core.Expressions;
 using PocoOrm.Core.Helpers;
 using PocoOrm.SqlServer.Helpers;
+using PocoOrm.SqlServer.Helpers;
 
 namespace PocoOrm.SqlServer.Command
 {
-    internal class SqlSelect<TEntity> : ISelect<TEntity> where TEntity : class, new()
+    internal class SqlSelect<TEntity> : ReaderExecute<TEntity>, ISelect<TEntity> where TEntity : class, new()
     {
-        private readonly SqlRepository<TEntity> _repository;
-
+        protected new SqlRepository<TEntity> Repository => base.Repository as SqlRepository<TEntity>;
         private Expression<Predicate<TEntity>> _expression;
 
-        public SqlSelect(SqlRepository<TEntity> sqlRepository)
+        public SqlSelect(SqlRepository<TEntity> repository): base(repository)
         {
-            _repository = sqlRepository ?? throw new ArgumentNullException(nameof(sqlRepository));
         }
 
-        public async Task<IEnumerable<TEntity>> ExecuteAsync()
+        public override async Task<IEnumerable<TEntity>> ExecuteAsync()
         {
-            SqlCommand cmd = _repository.Context.Connection.CreateCommand();
+            SqlCommand cmd = Repository.Context.Connection.CreateCommand();
 
             if (_expression != null)
             {
-                ExpressionToSql parser = new ExpressionToSql(_repository.Context.Options);
+                ExpressionToSql parser = new ExpressionToSql(this, Repository.Context.Options);
 
                 ISqlBuilder builder = parser.Visit(_expression);
 
                 string whereClause = builder.Build(parser, out DbParameter[] parameters);
 
-                cmd.CommandText = $"SELECT * FROM  {_repository.Information.Name} WHERE {whereClause}";
+                cmd.CommandText = $"SELECT * FROM  {Repository.Information.Name} WHERE {whereClause}";
 
                 foreach (DbParameter parameter in parameters)
                 {
@@ -45,10 +46,11 @@ namespace PocoOrm.SqlServer.Command
             }
             else
             {
-                cmd.CommandText = $"SELECT * FROM  {_repository.Information.Name}";
+                cmd.CommandText = $"SELECT * FROM  {Repository.Information.Name}";
             }
-
-            return await cmd.Connection.OpenDatabase(async () => await cmd.ExecuteReaderAsync(_repository.Mapper));
+            //cmd.Connection.
+            return await ExecuteReaderAsync(cmd);//todo
+            //return await cmd.Connection.OpenDatabase(async () => await ExecuteReaderAsync(cmd)/* await cmd.ExecuteReaderAsync(_repository.Mapper)*/);
         }
 
         public ISelect<TEntity> Where(Expression<Predicate<TEntity>> expression)
@@ -61,5 +63,6 @@ namespace PocoOrm.SqlServer.Command
         {
             throw new NotImplementedException();
         }
+        public string ParameterName { get; } //todo
     }
 }

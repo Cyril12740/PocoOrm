@@ -9,23 +9,30 @@ using System.Threading.Tasks;
 using PocoOrm.Core.Command;
 using PocoOrm.Core.Contract.Command;
 using PocoOrm.Core.Helpers;
+using PocoOrm.SqlServer.Helpers;
 
 namespace PocoOrm.SqlServer.Command
 {
-    internal class SqlInsert<TEntity> : IInsert<TEntity> where TEntity : class, new()
+    internal class SqlInsert<TEntity> : ReaderExecute<TEntity>, IInsert<TEntity> where TEntity : class, new()
     {
         private readonly SqlRepository<TEntity> _repository;
 
         private TEntity[] _entities = new TEntity[0];
+        private int _parameterCounter;
 
-        public SqlInsert(SqlRepository<TEntity> repository)
+        public SqlInsert(SqlRepository<TEntity> repository): base(repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<IEnumerable<TEntity>> ExecuteAsync()
+        public override async Task<IEnumerable<TEntity>> ExecuteAsync()
         {
-            InsertBuilderResult result = new InsertBuilder<TEntity>(_repository).Build(_repository.Context.Options, _entities);
+            if (_entities.Length == 0)
+            {
+                return new TEntity[0];
+            }
+
+            InsertBuilderResult result = new InsertBuilder<TEntity>(_repository, this).Build(_repository.Context.Options, _entities);
             StringBuilder sb = new StringBuilder();
             sb.Append("INSERT INTO ")
               .AppendLine(_repository.Information.Name)
@@ -41,13 +48,14 @@ namespace PocoOrm.SqlServer.Command
                 cmd.Parameters.Add(parameter);
             }
 
-            return await cmd.Connection.OpenDatabase(async () => await cmd.ExecuteReaderAsync(_repository.Mapper));
+            return await cmd.Connection.OpenDatabase(async () => await ExecuteReaderAsync(cmd));
         }
 
         public IInsert<TEntity> Values(params TEntity[] values)
         {
-            _entities = _entities.Concat(values).ToArray();
+            _entities = _entities.Concat(values?.Where(e => e != null) ?? new TEntity[0]).ToArray();
             return this;
         }
+        public string ParameterName => $"@parameter{++_parameterCounter}";
     }
 }

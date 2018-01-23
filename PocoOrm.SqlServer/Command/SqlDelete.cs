@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PocoOrm.Core.Contract.Command;
 using PocoOrm.Core.Helpers;
+using PocoOrm.SqlServer.Helpers;
 
 namespace PocoOrm.SqlServer.Command
 {
