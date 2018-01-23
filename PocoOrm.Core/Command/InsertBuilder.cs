@@ -36,7 +36,7 @@ namespace PocoOrm.Core.Command
                         continue;
                     }
 
-                    string parameterName = ParameterName;
+                    string parameterName = _counter.ParameterName;
                     DbParameter parameter = options.ParameterBuilder.Build(parameterName, column, entity);
                     paramterNames.Add(parameterName);
                     parameters.Add(parameter);
