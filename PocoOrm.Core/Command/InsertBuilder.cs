@@ -4,24 +4,24 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using PocoOrm.Core.Annotations;
+using PocoOrm.Core.Contract;
 
 namespace PocoOrm.Core.Command
 {
-    public class InsertBuilder
+    public class InsertBuilder<TEntity> where TEntity : class, new()
     {
+        private readonly IRepository<TEntity> _repository;
         private int _counter;
 
         private string ParameterName => $"@parameter{++_counter}";
 
-        public InsertBuilderResult Build<TEntity>(Options options, TEntity[] entities)
+        public InsertBuilder(IRepository<TEntity> repository)
         {
-            Type type = typeof(TEntity);
-            Dictionary<PropertyInfo, ColumnAttribute> properties = type.GetProperties()
-                                                                       .Where(PredicateMustInsert)
-                                                                       .ToDictionary(e => e,
-                                                                                     c => c
-                                                                                         .GetCustomAttribute<
-                                                                                             ColumnAttribute>());
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
+
+        public InsertBuilderResult Build(Options options, TEntity[] entities)
+        {                                                                     /*   ColumnAttribute>());*/
             List<DbParameter> parameters = new List<DbParameter>();
             List<string> entitySql = new List<string>();
 
@@ -29,13 +29,15 @@ namespace PocoOrm.Core.Command
             {
                 List<string> paramterNames = new List<string>();
 
-                foreach (KeyValuePair<PropertyInfo, ColumnAttribute> pair in properties)
+                foreach (ColumnInformation<TEntity> column in _repository.Information.Columns)
                 {
-                    PropertyInfo property = pair.Key;
-                    ColumnAttribute column = pair.Value;
+                    if (column.IsIdentity)
+                    {
+                        continue;
+                    }
+
                     string parameterName = ParameterName;
-                    DbParameter parameter =
-                        options.ParameterBuilder.Build(parameterName, column, property.GetValue(entity));
+                    DbParameter parameter = options.ParameterBuilder.Build(parameterName, column, entity);
                     paramterNames.Add(parameterName);
                     parameters.Add(parameter);
                 }
@@ -45,23 +47,10 @@ namespace PocoOrm.Core.Command
 
             return new InsertBuilderResult
             {
-                Columns = $"({string.Join(", ", properties.Select(c => c.Value.Name))})",
+                Columns = $"({string.Join(", ", _repository.Information.Columns.Where(c => !c.IsIdentity).Select(c => c.Name))})",
                 Sql = string.Join("," + Environment.NewLine, entitySql),
                 Parameters = parameters
             };
-        }
-
-        private static bool PredicateMustInsert(PropertyInfo property)
-        {
-            ColumnAttribute customAttribute = property.GetCustomAttribute<ColumnAttribute>();
-
-            if (customAttribute is null)
-            {
-                return false;
-            }
-
-            PrimaryKeyAttribute primaryKeyAttribute = property.GetCustomAttribute<PrimaryKeyAttribute>();
-            return primaryKeyAttribute?.Identity != true;
         }
     }
 }

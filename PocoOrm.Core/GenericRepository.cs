@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Reflection;
-using PocoOrm.Core.Annotations;
 using PocoOrm.Core.Contract;
 using PocoOrm.Core.Contract.Command;
 
@@ -8,15 +6,14 @@ namespace PocoOrm.Core
 {
     public abstract class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : class, new()
     {
+        public IContext Context { get; }
+        public  TableInformation<TEntity> Information { get; } = new TableInformation<TEntity>();
+
         public Mapper<TEntity> Mapper { get; }
-
-        public string TableName { get; }
-
-        protected GenericRepository()
+        
+        protected GenericRepository(IContext context)
         {
-            Type type = typeof(TEntity);
-            TableName = type.GetCustomAttribute<TableAttribute>()?.Name ??
-                        throw new ArgumentException($"TableAttribute isn't defined on {type.Name}", nameof(TEntity));
+            Context = context ?? throw new ArgumentNullException(nameof(context));
             Mapper = new Mapper<TEntity>();
         }
 
@@ -25,6 +22,8 @@ namespace PocoOrm.Core
         public abstract ISelect<TEntity> Select();
 
         public abstract IUpdate<TEntity> Update();
+
+        public abstract IExecutable<int> Delete(params TEntity[] entities);
 
         public abstract IDelete<TEntity> Delete();
     }

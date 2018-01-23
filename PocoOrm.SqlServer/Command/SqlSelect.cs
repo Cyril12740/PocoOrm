@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using PocoOrm.Core.Contract.Command;
 using PocoOrm.Core.Contract.Expressions;
 using PocoOrm.Core.Expressions;
 using PocoOrm.Core.Helpers;
+using PocoOrm.SqlServer.Helpers;
 
 namespace PocoOrm.SqlServer.Command
 {
@@ -24,7 +26,7 @@ namespace PocoOrm.SqlServer.Command
 
         public async Task<IEnumerable<TEntity>> ExecuteAsync()
         {
-            IDbCommand cmd = _repository.Context.Connection.CreateCommand();
+            SqlCommand cmd = _repository.Context.Connection.CreateCommand();
 
             if (_expression != null)
             {
@@ -34,7 +36,7 @@ namespace PocoOrm.SqlServer.Command
 
                 string whereClause = builder.Build(parser, out DbParameter[] parameters);
 
-                cmd.CommandText = $"SELECT * FROM  {_repository.TableName} WHERE {whereClause}";
+                cmd.CommandText = $"SELECT * FROM  {_repository.Information.Name} WHERE {whereClause}";
 
                 foreach (DbParameter parameter in parameters)
                 {
@@ -43,10 +45,10 @@ namespace PocoOrm.SqlServer.Command
             }
             else
             {
-                cmd.CommandText = $"SELECT * FROM  {_repository.TableName}";
+                cmd.CommandText = $"SELECT * FROM  {_repository.Information.Name}";
             }
 
-            return await cmd.ExecuteReaderAsync(_repository.Mapper);
+            return await cmd.Connection.OpenDatabase(async () => await cmd.ExecuteReaderAsync(_repository.Mapper));
         }
 
         public ISelect<TEntity> Where(Expression<Predicate<TEntity>> expression)
