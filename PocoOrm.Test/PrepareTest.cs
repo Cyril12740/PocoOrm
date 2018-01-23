@@ -20,6 +20,7 @@ namespace PocoOrm.Test
         public async Task Initialize()
         {
             await _connection.OpenAsync();
+            await Execute("DELETE FROM Test");
             await Execute("DBCC CHECKIDENT ('Test', RESEED, 0)");
             await Execute("INSERT INTO Test VALUES ('Bonjour')");
             await Execute("INSERT INTO Test VALUES ('Salut')");

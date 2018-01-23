@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,15 +25,15 @@ namespace PocoOrm.SqlServer.Command
 
         public async Task<IEnumerable<TEntity>> ExecuteAsync()
         {
-            InsertBuilderResult result = new InsertBuilder().Build(_repository.Context.Options, _entities);
+            InsertBuilderResult result = new InsertBuilder<TEntity>(_repository).Build(_repository.Context.Options, _entities);
             StringBuilder sb = new StringBuilder();
             sb.Append("INSERT INTO ")
-              .AppendLine(_repository.TableName)
+              .AppendLine(_repository.Information.Name)
               .AppendLine(result.Columns)
               .AppendLine("OUTPUT INSERTED.*")
               .AppendLine("VALUES")
               .AppendLine(result.Sql);
-            IDbCommand cmd = _repository.Context.Connection.CreateCommand();
+            SqlCommand cmd = _repository.Context.Connection.CreateCommand();
             cmd.CommandText = sb.ToString();
 
             foreach (DbParameter parameter in result.Parameters)
@@ -40,7 +41,7 @@ namespace PocoOrm.SqlServer.Command
                 cmd.Parameters.Add(parameter);
             }
 
-            return await cmd.ExecuteReaderAsync(_repository.Mapper);
+            return await cmd.Connection.OpenDatabase(async () => await cmd.ExecuteReaderAsync(_repository.Mapper));
         }
 
         public IInsert<TEntity> Values(params TEntity[] values)

@@ -1,9 +1,10 @@
-﻿namespace PocoOrm.Core.Contract.Command
-{
-    public interface IDelete<in TEntity> : IExecutable<int> where TEntity : class, new()
-    {
-        IDelete<TEntity> Delete(TEntity entity);
+﻿using System;
+using System.Linq.Expressions;
 
-        IDelete<TEntity> Delete(params TEntity[] entities);
+namespace PocoOrm.Core.Contract.Command
+{
+    public interface IDelete<TEntity> : IExecutable<int> where TEntity : class, new()
+    {
+        IDelete<TEntity> Where(Expression<Predicate<TEntity>> expression);
     }
 }
