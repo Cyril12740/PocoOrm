@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Text;
-using PocoOrm.Core;
-using PocoOrm.Core.Annotations;
 using PocoOrm.Core.Contract;
-using PocoOrm.Core.Contract.Expressions;
 
 namespace PocoOrm.SqlServer
 {

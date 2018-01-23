@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using PocoOrm.Core.Contract.Expressions;
-using PocoOrm.Core.Expressions.Builder;
 using PocoOrm.Core.Expressions.Parser;
 
 namespace PocoOrm.Core

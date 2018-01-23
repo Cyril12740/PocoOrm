@@ -19,9 +19,12 @@ namespace PocoOrm.Test
         [TestMethod]
         public async Task TestCanSelect()
         {
-            IEnumerable<TestTable> result = await Context.Test.Select().ExecuteAsync();
-            Assert.IsNotNull(result);
-            Assert.AreEqual(3, result.Count());
+            InterceptCommand += command => Assert.AreEqual("SELECT * FROM  Test", command.CommandText);
+            await Exectute(async () => {
+                IEnumerable<TestTable> result = await Context.Test.Select().ExecuteAsync();
+                Assert.IsNotNull(result);
+                Assert.AreEqual(3, result.Count());
+            });
         }
 
         [TestMethod]

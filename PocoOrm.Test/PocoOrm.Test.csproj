@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeleteTest.cs" />
+    <Compile Include="BreakExecutionException.cs" />
     <Compile Include="InsertTest.cs" />
     <Compile Include="PrepareTest.cs" />
     <Compile Include="SelectTest.cs" />

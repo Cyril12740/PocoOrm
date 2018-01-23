@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Linq.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PocoOrm.Core;
+using PocoOrm.Core.Contract.Command;
 using PocoOrm.Core.Contract.Expressions;
 using PocoOrm.Core.Expressions;
 using PocoOrm.Test.Stubs;
@@ -10,14 +11,16 @@ using PocoOrm.Test.Stubs;
 namespace PocoOrm.Test
 {
     [TestClass]
-    public class ExpressionTest
+    public class ExpressionTest : IParameterCounter
     {
         private ExpressionToSql _builder;
+        private int _counter;
 
         [TestInitialize]
         public void Initialize()
         {
-            _builder = new ExpressionToSql(Options.Default.Use(new TestParameterBuilder()));
+            _counter = 0;
+            _builder = new ExpressionToSql(this, Options.Default.Use(new TestParameterBuilder()));
         }
 
         [TestMethod]
@@ -316,5 +319,6 @@ namespace PocoOrm.Test
             Assert.AreEqual("@parameter1", parameters[0].ParameterName);
             Assert.AreEqual(2, parameters[0].Value);
         }
+        public string ParameterName => $"@parameter{++_counter}";
     }
 }

@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using PocoOrm.Core.Command;
-using PocoOrm.Core.Contract;
 using PocoOrm.Core.Contract.Command;
 using PocoOrm.Core.Contract.Expressions;
 using PocoOrm.Core.Expressions;
-using PocoOrm.Core.Helpers;
-using PocoOrm.SqlServer.Helpers;
 using PocoOrm.SqlServer.Helpers;
 
 namespace PocoOrm.SqlServer.Command
@@ -20,6 +16,7 @@ namespace PocoOrm.SqlServer.Command
     {
         protected new SqlRepository<TEntity> Repository => base.Repository as SqlRepository<TEntity>;
         private Expression<Predicate<TEntity>> _expression;
+        private int _counter;
 
         public SqlSelect(SqlRepository<TEntity> repository): base(repository)
         {
@@ -48,9 +45,7 @@ namespace PocoOrm.SqlServer.Command
             {
                 cmd.CommandText = $"SELECT * FROM  {Repository.Information.Name}";
             }
-            //cmd.Connection.
-            return await ExecuteReaderAsync(cmd);//todo
-            //return await cmd.Connection.OpenDatabase(async () => await ExecuteReaderAsync(cmd)/* await cmd.ExecuteReaderAsync(_repository.Mapper)*/);
+            return await cmd.Connection.OpenDatabase(async () => await ExecuteReaderAsync(cmd));
         }
 
         public ISelect<TEntity> Where(Expression<Predicate<TEntity>> expression)
@@ -63,6 +58,6 @@ namespace PocoOrm.SqlServer.Command
         {
             throw new NotImplementedException();
         }
-        public string ParameterName { get; } //todo
+        public string ParameterName => $"@parameter{++_counter}";
     }
 }

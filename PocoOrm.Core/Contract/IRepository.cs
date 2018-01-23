@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using PocoOrm.Core.Contract.Command;
+﻿using PocoOrm.Core.Contract.Command;
 
 namespace PocoOrm.Core.Contract
 {

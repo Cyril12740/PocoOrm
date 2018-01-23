@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using PocoOrm.Core.Annotations;
 using PocoOrm.Core.Contract;
 using PocoOrm.Core.Contract.Command;
 

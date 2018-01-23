@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Reflection;
-using PocoOrm.Core.Annotations;
 using PocoOrm.Core.Contract;
 using PocoOrm.Core.Contract.Command;
 

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using PocoOrm.Core.Contract;
 using PocoOrm.Core.Contract.Command;
 using PocoOrm.Core.Exceptions;
-using PocoOrm.Core.Helpers;
 
 namespace PocoOrm.Core.Command
 {
@@ -20,30 +19,17 @@ namespace PocoOrm.Core.Command
         protected async Task<IEnumerable<TEntity>> ExecuteReaderAsync(IDbCommand cmd)
         {
             return await Task.Run(() => {
-                try
+                Intersept(cmd);
+                using (IDataReader reader = cmd.ExecuteReader())
                 {
-                    Intersept(cmd);
+                    List<TEntity> items = new List<TEntity>();
 
-                    cmd.Connection.Open();
-
-                    using (IDataReader reader = cmd.ExecuteReader())
+                    while (reader.Read())
                     {
-                        List<TEntity> items = new List<TEntity>();
-
-                        while (reader.Read())
-                        {
-                            items.Add(Repository.Mapper.Map(reader));
-                        }
-
-                        return items;
+                        items.Add(Repository.Mapper.Map(reader));
                     }
-                }
-                finally
-                {
-                    if(cmd.Connection.State != ConnectionState.Closed)
-                    {
-                        cmd.Connection.Close();
-                    }
+
+                    return items;
                 }
             });
         }
