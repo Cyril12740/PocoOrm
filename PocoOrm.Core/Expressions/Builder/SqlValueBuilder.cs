@@ -14,9 +14,8 @@ namespace PocoOrm.Core.Expressions.Builder
 
         public string Build(ExpressionToSql parser, out DbParameter[] parameters)
         {
-            string parameterName = $"@parameter{parser.Parameter}";
             parameters = new DbParameter[0];
-            return parameterName;
+            return parser.Counter.ParameterName;
         }
     }
 }

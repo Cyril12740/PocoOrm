@@ -4,14 +4,18 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using PocoOrm.Core.Annotations;
+using PocoOrm.Core.Contract.Command;
 
 namespace PocoOrm.Core.Command
 {
     public class InsertBuilder
     {
-        private int _counter;
+        private readonly IParameterCounter _counter;
 
-        private string ParameterName => $"@parameter{++_counter}";
+        public InsertBuilder(IParameterCounter counter)
+        {
+            _counter = counter ?? throw new ArgumentNullException(nameof(counter));
+        }
 
         public InsertBuilderResult Build<TEntity>(Options options, TEntity[] entities)
         {
@@ -33,7 +37,7 @@ namespace PocoOrm.Core.Command
                 {
                     PropertyInfo property = pair.Key;
                     ColumnAttribute column = pair.Value;
-                    string parameterName = ParameterName;
+                    string parameterName = _counter.ParameterName;
                     DbParameter parameter =
                         options.ParameterBuilder.Build(parameterName, column, property.GetValue(entity));
                     paramterNames.Add(parameterName);
