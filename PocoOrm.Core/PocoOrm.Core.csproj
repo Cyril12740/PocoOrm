@@ -55,6 +55,7 @@
     <Compile Include="Expressions\Parser\CompareNullParser.cs" />
     <Compile Include="Helpers\EnumCompareHelper.cs" />
     <Compile Include="Exceptions\InterseptException.cs" />
+    <Compile Include="Helpers\ParameterCounter.cs" />
     <Compile Include="Helpers\RepositoryHeler.cs" />
     <Compile Include="Exceptions\ParserException.cs" />
     <Compile Include="Expressions\Parser\ColumnValueParser.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Contract\Expressions\IParameterBuilder.cs" />
     <Compile Include="IInterceptCommand.cs" />
     <Compile Include="ISqlInverseBuilder.cs" />
+    <Compile Include="Exceptions\NoPrimaryKeyException.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Contract\IContext.cs" />
     <Compile Include="Contract\Command\IDelete.cs" />

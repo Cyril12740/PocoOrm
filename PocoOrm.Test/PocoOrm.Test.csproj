@@ -61,6 +61,7 @@
     <Compile Include="Stubs\TestParameter.cs" />
     <Compile Include="Stubs\TestParameterBuilder.cs" />
     <Compile Include="Stubs\TestTable.cs" />
+    <Compile Include="UpdateTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

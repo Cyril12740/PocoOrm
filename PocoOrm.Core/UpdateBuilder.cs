@@ -4,35 +4,58 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using PocoOrm.Core.Annotations;
+using PocoOrm.Core.Contract;
 using PocoOrm.Core.Contract.Command;
+using PocoOrm.Core.Contract.Expressions;
+using PocoOrm.Core.Exceptions;
+using PocoOrm.Core.Helpers;
 
 namespace PocoOrm.Core
 {
     public class UpdateBuilder<TEntity> where TEntity : class, new()
     {
-        private readonly IUpdate<TEntity> _updateCommand;
-        private readonly Dictionary<ColumnAttribute, PropertyInfo> _columnToUpdate;
-        public UpdateBuilder(IUpdate<TEntity> updateCommand)
-        {
-            _updateCommand = updateCommand ?? throw new ArgumentNullException(nameof(updateCommand));
-            var type = typeof(TEntity);
+        private readonly TableInformation<TEntity> _information;
+        private readonly IParameterBuilder _builder;
+        private readonly IParameterCounter _counter;
 
-            _columnToUpdate = type.GetProperties()
-                                  .Where(p => p.GetCustomAttribute<ColumnAttribute>() != null && 
-                                              !(p.GetCustomAttribute<PrimaryKeyAttribute>()?.Identity ?? false))
-                                  .ToDictionary(p => p.GetCustomAttribute<ColumnAttribute>(), p => p);
+        public UpdateBuilder(IRepository<TEntity> repository): this(repository.Information, repository.Context.Options.ParameterBuilder, new ParameterCounter())
+        {
+
         }
 
-        ResultUpdateBuilder Prepare(TEntity entity)
+        public UpdateBuilder(TableInformation<TEntity> information, IParameterBuilder builder, IParameterCounter counter)
+        {
+            _information = information ?? throw new ArgumentNullException(nameof(information));
+            _builder = builder ?? throw new ArgumentNullException(nameof(builder));
+            _counter = counter ?? throw new ArgumentNullException(nameof(counter));
+        }
+
+        public ResultUpdateBuilder Prepare(TEntity entity)
         {
             var parameters = new List<DbParameter>();
             var setter = new List<string>();
-            foreach (KeyValuePair<ColumnAttribute, PropertyInfo> info in _columnToUpdate)
+
+            if (_information.PrimaryKey == null)
             {
-                string parameterName = _updateCommand.ParameterName;
-                var str = $"{info.Key.Name} = {parameterName}";
+                throw new NoPrimaryKeyException();
+            }
+
+
+            string parameterName = _counter.ParameterName;
+            string where = $"{_information.PrimaryKey.Name} = {parameterName}";
+            parameters.Add(_builder.Build(parameterName, _information.PrimaryKey, entity));
+            
+            foreach (var info in _information.Columns)
+            {
+                if (info.IsIdentity)
+                {
+                    continue;
+                }
+
+                parameterName = _counter.ParameterName;
+                string str = $"{info.Name} = {parameterName}";
                 setter.Add(str);
-                parameters.Add(_updateCommand.Options.ParameterBuilder.Build(parameterName, info.Key, info.Value.GetValue(entity)));
+                parameters.Add(_builder.Build(parameterName, info, entity));
             }
 
             //todo ID => Primary key in where clause
@@ -40,7 +63,8 @@ namespace PocoOrm.Core
             return new ResultUpdateBuilder()
             {
                 Sql = string.Join(", ", setter),
-                Parameters = parameters
+                Parameters = parameters,
+                Where = where
             };
         }
     }
@@ -49,5 +73,6 @@ namespace PocoOrm.Core
     {
         public IEnumerable<DbParameter> Parameters { get; set; }
         public string Sql { get; set; }
+        public string Where { get; set; }
     }
 }

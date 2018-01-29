@@ -57,12 +57,12 @@ namespace PocoOrm.SqlServer
 
     internal class SqlUpdate<TEntity> : IUpdate<TEntity> where TEntity: class , new ()
     {
-        private readonly IRepository<TEntity> _repository;
+        private readonly SqlRepository<TEntity> _repository;
         private TEntity[] _entities;
         private UpdateBuilder<TEntity> _updateBuilder;
         private int _parameterCounter;
         public string ParameterName => $"@parameter{ ++_parameterCounter }";
-        public SqlUpdate(IRepository<TEntity> repository, TEntity[] entities)
+        public SqlUpdate(SqlRepository<TEntity> repository, TEntity[] entities)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _entities = entities ?? throw new ArgumentNullException(nameof(entities));
@@ -72,7 +72,7 @@ namespace PocoOrm.SqlServer
                 throw new ArgumentException("Value cannot be an empty collection.", nameof(entities));
             }
 
-            _updateBuilder = new UpdateBuilder<TEntity>(this);
+            _updateBuilder = new UpdateBuilder<TEntity>(_repository);
         }
 
         public Options Options => _repository.Context.Options;
