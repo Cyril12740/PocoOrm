@@ -7,12 +7,4 @@ namespace PocoOrm.Core.Contract.Command
         Options Options { get; }//todo why
         IUpdate<TEntity> Entities(params TEntity[] entities);
     }
-
-    public interface IParameterCounter
-    {
-        /// <summary>
-        /// Must be introduce an different name on each call
-        /// </summary>
-        string ParameterName { get; }
-    }
 }
