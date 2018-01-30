@@ -4,13 +4,13 @@ using PocoOrm.Core.Contract.Command;
 
 namespace PocoOrm.Core
 {
-    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class, new()
+    public abstract class Repository<TEntity> where TEntity : class, new()
     {
-        public IContext Context { get; }
+        internal IContext Context { get; }
 
-        public  TableInformation<TEntity> Information { get; } = new TableInformation<TEntity>();
+        internal TableInformation<TEntity> Information { get; } = new TableInformation<TEntity>();
 
-        public Mapper<TEntity> Mapper { get; }
+        internal Mapper<TEntity> Mapper { get; }
         
         protected Repository(IContext context)
         {

@@ -18,7 +18,7 @@ namespace PocoOrm.Core
         private readonly IParameterBuilder _builder;
         private readonly IParameterCounter _counter;
 
-        public UpdateBuilder(IRepository<TEntity> repository): this(repository.Information, repository.Context.Options.ParameterBuilder, new ParameterCounter())
+        public UpdateBuilder(Repository<TEntity> repository): this(repository.Information, repository.Context.Options.ParameterBuilder, new ParameterCounter())
         {
 
         }

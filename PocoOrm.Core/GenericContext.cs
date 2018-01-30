@@ -30,7 +30,7 @@ namespace PocoOrm.Core
                                               .Where(p =>
                                                          p.PropertyType.IsGenericType &&
                                                          p.PropertyType.GetGenericTypeDefinition() ==
-                                                         typeof(IRepository<>)))
+                                                         typeof(Repository<>)))
             {
                 object repository = CreateRepository(property.PropertyType.GetGenericArguments()[0]);
                 property.SetValue(this, repository);

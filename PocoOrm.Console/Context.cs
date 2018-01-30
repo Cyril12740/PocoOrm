@@ -7,7 +7,7 @@ namespace PocoOrm.Console
 {
     internal class Context : SqlContext
     {
-        public IRepository<TestTable> Test { get; set; }
+        public Repository<TestTable> Test { get; set; }
 
         public Context(SqlConnection connection, Options options) : base(connection, options)
         {

@@ -9,10 +9,10 @@ namespace PocoOrm.Core.Command
 {
     public class InsertBuilder<TEntity> where TEntity : class, new()
     {
-        private readonly IRepository<TEntity> _repository;
+        private readonly Repository<TEntity> _repository;
         private readonly IParameterCounter _counter;
 
-        public InsertBuilder(IRepository<TEntity> repository, IParameterCounter counter)
+        public InsertBuilder(Repository<TEntity> repository, IParameterCounter counter)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _counter = counter ?? throw new ArgumentNullException(nameof(counter));

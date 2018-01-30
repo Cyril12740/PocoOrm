@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Text;
+using PocoOrm.Core;
 using PocoOrm.Core.Contract;
 
 namespace PocoOrm.SqlServer
@@ -10,9 +11,9 @@ namespace PocoOrm.SqlServer
         private int _counter;
         public string ParameterName => $"@parameter{++_counter}";
 
-        private readonly IRepository<TEntity> _repository;
+        private readonly Repository<TEntity> _repository;
 
-        public SqlDeleteBuilder(IRepository<TEntity> repository)
+        public SqlDeleteBuilder(Repository<TEntity> repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }

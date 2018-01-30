@@ -10,8 +10,8 @@ namespace PocoOrm.Core.Command
 {
     public abstract class ReaderExecute<TEntity> : IExecutable<IEnumerable<TEntity>> where TEntity : class, new()
     {
-        protected IRepository<TEntity> Repository { get; }
-        protected ReaderExecute(IRepository<TEntity> repository)
+        protected Repository<TEntity> Repository { get; }
+        protected ReaderExecute(Repository<TEntity> repository)
         {
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }

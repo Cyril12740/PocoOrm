@@ -33,7 +33,7 @@ namespace PocoOrm.Test
         private class SpecialContext : SqlContext
         {
             // ReSharper disable once UnusedMember.Local
-            public IRepository<ErrorType> Repository { get; set; }
+            public Repository<ErrorType> Repository { get; set; }
 
             public SpecialContext(SqlConnection connection, Options options) : base(connection, options)
             {
