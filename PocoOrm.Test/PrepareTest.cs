@@ -12,7 +12,7 @@ namespace PocoOrm.Test
     [TestClass]
     public abstract class PrepareTest: IInterceptCommand
     {
-        private const string ConnectionString =
+        public const string ConnectionString =
             @"Data Source=.\SQLEXPRESS;Initial Catalog=Test;Integrated Security=True";
 
         protected readonly SqlConnection Connection = new SqlConnection(ConnectionString);
