@@ -2,7 +2,7 @@
 
 namespace PocoOrm.Core.Contract.Command
 {
-    public interface IInsert<TEntity> : IExecutable<IEnumerable<TEntity>> where TEntity : class, new()
+    public interface IInsert<TEntity> : IExecutable<IEnumerable<TEntity>>, IParameterCounter where TEntity : class, new()
     {
         IInsert<TEntity> Values(params TEntity[] values);
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using PocoOrm.Core.Contract.Expressions;
 using PocoOrm.Core.Expressions.Builder;
 
@@ -9,7 +8,7 @@ namespace PocoOrm.Core.Expressions.Parser
     {
         protected override ISqlBuilder Visit(ConstantExpression expression, ExpressionToSql parser)
         {
-            return new SqlValueBuilder(expression.Value);
+            return expression.Value != null ? new SqlValueBuilder(expression.Value) : null;
         }
     }
 }

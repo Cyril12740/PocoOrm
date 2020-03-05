@@ -1,38 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using PocoOrm.Core.Contract.Expressions;
-using PocoOrm.Core.Expressions.Builder;
 using PocoOrm.Core.Expressions.Parser;
 
 namespace PocoOrm.Core
 {
     public class Options
     {
-        private readonly List<IBinaryBuilder> _binaryParser = new List<IBinaryBuilder>();
+        private readonly List<IBinaryParser> _binaryParser = new List<IBinaryParser>();
 
-        private readonly List<IParser> _expressionParser = new List<IParser>();
+        private readonly List<IParser> _parser = new List<IParser>();
+        public static    Options       Empty => new Options();
 
-        public IEnumerable<IParser> ExpressionParser => _expressionParser.AsReadOnly();
+        public static Options Default => new Options()
+                                         .Use(new GroupedConditionParser(), new ColumnValueParser(), new CompareNullParser())
+                                         .Use(Expressions.Parser.Parser.Default());
 
-        public IEnumerable<IBinaryBuilder> BinaryParser => _binaryParser.AsReadOnly();
+        public ReadOnlyCollection<IParser> Parser => _parser.AsReadOnly();
+
+        public ReadOnlyCollection<IBinaryParser> BinaryParser => _binaryParser.AsReadOnly();
+
+        public IInterceptCommand InterceptCommands { get; private set; }
 
         public IParameterBuilder ParameterBuilder { get; private set; }
 
-        public Options()
+        private Options()
         {
-            Use(new BinaryParser(this), new LambdaParser(), new MemberParser(), new ConstantParser());
-            Use(new ColumnValueBuilder());
         }
 
-        public Options Use(IParser parser)
+        private Options Use(IEnumerable<IParser> parameterBuilder)
         {
-            if (parser != null)
-            {
-                _expressionParser.Add(parser);
-            }
+            return Use(parameterBuilder.ToArray());
+        }
 
+        public Options Use(IParameterBuilder parameterBuilder)
+        {
+            ParameterBuilder = parameterBuilder ?? throw new ArgumentNullException(nameof(parameterBuilder));
             return this;
         }
+
+        public Options Use(IInterceptCommand interceptCommand)
+        {
+            InterceptCommands = interceptCommand ?? throw new ArgumentNullException(nameof(interceptCommand));
+            return this;
+        }
+
         public Options Use(params IParser[] parsers)
         {
             if (parsers is null)
@@ -40,35 +54,18 @@ namespace PocoOrm.Core
                 throw new ArgumentNullException(nameof(parsers));
             }
 
-            _expressionParser.AddRange(parsers);
+            _parser.AddRange(parsers);
             return this;
         }
 
-        public Options Use(IBinaryBuilder parser)
+        public Options Use(params IBinaryParser[] binaryBuilders)
         {
-            if (parser is null)
+            if (binaryBuilders is null)
             {
-                throw new ArgumentNullException(nameof(parser));
+                throw new ArgumentNullException(nameof(binaryBuilders));
             }
 
-            _binaryParser.Add(parser);
-            return this;
-        }
-
-        public Options Use(params IBinaryBuilder[] parsers)
-        {
-            if (parsers is null)
-            {
-                throw new ArgumentNullException(nameof(parsers));
-            }
-
-            _binaryParser.AddRange(parsers);
-            return this;
-        }
-
-        public Options Use(IParameterBuilder builder)
-        {
-            ParameterBuilder = builder ?? throw new ArgumentNullException(nameof(builder));
+            _binaryParser.AddRange(binaryBuilders);
             return this;
         }
 

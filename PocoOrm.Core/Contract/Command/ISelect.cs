@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace PocoOrm.Core.Contract.Command
 {
-    public interface ISelect<TEntity> : IExecutable<IEnumerable<TEntity>> where TEntity : class, new()
+    public interface ISelect<TEntity> : IExecutable<IEnumerable<TEntity>>, IParameterCounter where TEntity : class, new()
     {
         ISelect<TEntity> Where(Expression<Predicate<TEntity>> expression);
 

@@ -18,7 +18,7 @@ namespace PocoOrm.Core.Annotations
             Size = size;
         }
 
-        public ColumnAttribute(string name, DbType type): this(name, type, null)
+        public ColumnAttribute(string name, DbType type) : this(name, type, null)
         {
         }
     }

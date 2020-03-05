@@ -14,10 +14,12 @@ namespace PocoOrm.Core.Expressions.Parser
             if (expression.Expression is ParameterExpression)
             {
                 ColumnAttribute attribute = expression.Member.GetCustomAttribute<ColumnAttribute>();
+
                 if (attribute == null)
                 {
                     throw new ArgumentException($"{expression.Member.Name} has not a column attribute");
                 }
+
                 return new SqlColumnBuilder(attribute);
             }
 

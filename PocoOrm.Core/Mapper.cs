@@ -10,14 +10,17 @@ namespace PocoOrm.Core
         public TEntity Map(IDataReader reader)
         {
             TEntity entity = new TEntity();
+
             foreach (PropertyInfo property in entity.GetType().GetProperties())
             {
                 ColumnAttribute customAttribute = property.GetCustomAttribute<ColumnAttribute>();
+
                 if (customAttribute != null)
                 {
                     property.SetValue(entity, Value(reader, customAttribute));
                 }
             }
+
             return entity;
         }
 

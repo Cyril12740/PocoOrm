@@ -5,17 +5,9 @@ namespace PocoOrm.Core.Contract.Expressions
 {
     public interface IParameterBuilder
     {
-        DbParameter Build(string name, ColumnAttribute column, object value);
-    }
-
-    public abstract class ParameterBuilder<TParameter> : IParameterBuilder
-        where TParameter: DbParameter
-    {
-        DbParameter IParameterBuilder.Build(string name, ColumnAttribute column, object value)
-        {
-            return Build(name, column, value);
-        }
-
-        protected abstract TParameter Build(string name, ColumnAttribute column, object value);
+        DbParameter Build<TEntity>(string name, ColumnInformation<TEntity> column, TEntity value) where TEntity : class, new();
+        
+        DbParameter Build(string name, ColumnAttribute column, object value);//todo merge into GenericContext & delete IContext ? aussi 
+        // todo  connection.CreateCommand().CreateParameter()// => may be
     }
 }
